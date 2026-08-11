@@ -2,9 +2,23 @@ import { Boxes } from "lucide-react";
 
 type LogoProps = {
   compact?: boolean;
+  variant?: "dark" | "light";
 };
 
-export function Logo({ compact = false }: LogoProps) {
+export function Logo({
+  compact = false,
+  variant = "dark",
+}: LogoProps) {
+  const textColor =
+    variant === "light"
+      ? "text-white"
+      : "text-[var(--text-primary)]";
+
+  const subtitleColor =
+    variant === "light"
+      ? "text-slate-400"
+      : "text-[var(--text-secondary)]";
+
   return (
     <div className="flex items-center gap-3">
       <div className="flex size-10 items-center justify-center rounded-xl bg-[var(--primary)] text-white">
@@ -13,11 +27,13 @@ export function Logo({ compact = false }: LogoProps) {
 
       {!compact && (
         <div className="flex flex-col">
-          <span className="text-lg font-semibold leading-none text-[var(--text-primary)]">
+          <span
+            className={`text-xl font-semibold leading-none ${textColor}`}
+          >
             CargoFlow
           </span>
 
-          <span className="mt-1.5 text-sm text-[var(--text-secondary)]">
+          <span className={`mt-1.5 text-sm ${subtitleColor}`}>
             Gestão de importações
           </span>
         </div>
