@@ -31,7 +31,7 @@ export default function LoginPage() {
         setIsLoading(true);
         await new Promise((resolve) => setTimeout(resolve, 2000)); // Simula uma requisição
         setIsLoading(false);
-        router.push("/");
+        router.push("/dashboard");
     }
   return (
     <main className="grid min-h-screen w-full lg:grid-cols-2">
