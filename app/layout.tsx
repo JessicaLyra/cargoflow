@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Geist } from "next/font/google";
 import "./globals.css";
+import { MockProvider } from "@/components/providers/MockProvider";
 
 const geist = Geist({
   variable: "--font-geist",
@@ -23,7 +24,9 @@ export default function RootLayout({
   return (
     <html lang="pt-BR">
       <body className={`${geist.variable} antialiased`}>
-        {children}
+        <MockProvider>
+          {children}
+        </MockProvider>
       </body>
     </html>
   );

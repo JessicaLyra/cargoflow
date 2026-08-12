@@ -1,6 +1,7 @@
 "use client";
 
 import {
+  AlertCircle,
   Check,
   FileText,
   Info,
@@ -14,20 +15,23 @@ import { useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 import { Button } from "@/components/ui/Button";
+import { submitAverbacao } from "@/lib/api/averbacao";
 import {
   averbacaoSchema,
   type AverbacaoFormData,
 } from "@/lib/validations/averbacao";
-import { generateProtocol } from "@/lib/utils/generateProtocol";
-
 
 type AverbacaoFormProps = {
   onSuccess: (protocol: string) => void;
 };
 
-
-export function AverbacaoForm({ onSuccess }: AverbacaoFormProps) {
+export function AverbacaoForm({
+  onSuccess,
+}: AverbacaoFormProps) {
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(
+    null,
+  );
 
   const {
     register,
@@ -49,39 +53,47 @@ export function AverbacaoForm({ onSuccess }: AverbacaoFormProps) {
   });
 
   const processType = useWatch({
-  control,
-  name: "processType",
-});
+    control,
+    name: "processType",
+  });
 
-const pdfFile = useWatch({
-  control,
-  name: "pdfFile",
-});
+  const pdfFile = useWatch({
+    control,
+    name: "pdfFile",
+  });
 
-const xmlFile = useWatch({
-  control,
-  name: "xmlFile",
-});
+  const xmlFile = useWatch({
+    control,
+    name: "xmlFile",
+  });
 
-const exchangeCoverage = useWatch({
-  control,
-  name: "exchangeCoverage",
-});
+  const exchangeCoverage = useWatch({
+    control,
+    name: "exchangeCoverage",
+  });
 
   const isDuimp = processType === "DUIMP";
 
   async function onSubmit(data: AverbacaoFormData) {
     setIsSubmitting(true);
+    setSubmitError(null);
 
-    await new Promise((resolve) => setTimeout(resolve, 1500));
+    try {
+      const response = await submitAverbacao(data);
 
-    const protocol = generateProtocol();
+      console.log("Averbação enviada:", response);
 
-    console.log("Averbação enviada:", data);
+      onSuccess(response.protocol);
+    } catch (error) {
+      const message =
+        error instanceof Error
+          ? error.message
+          : "Não foi possível enviar a averbação.";
 
-    onSuccess(protocol);
-
-    setIsSubmitting(false);
+      setSubmitError(message);
+    } finally {
+      setIsSubmitting(false);
+    }
   }
 
   return (
@@ -98,6 +110,7 @@ const exchangeCoverage = useWatch({
 
       <form onSubmit={handleSubmit(onSubmit)}>
         <div className="space-y-8 p-6 lg:p-8">
+          {/* Tipo de processo */}
           <div>
             <p className="mb-3 text-sm font-medium text-[var(--text-primary)]">
               Tipo de processo
@@ -146,13 +159,15 @@ const exchangeCoverage = useWatch({
             )}
           </div>
 
+          {/* Comissária e referência */}
           <div className="grid gap-5 lg:grid-cols-2">
             <div>
               <label
                 htmlFor="broker"
                 className="mb-2 block text-sm font-medium text-[var(--text-primary)]"
               >
-                Comissária <span className="text-red-500">*</span>
+                Comissária{" "}
+                <span className="text-red-500">*</span>
               </label>
 
               <select
@@ -164,12 +179,21 @@ const exchangeCoverage = useWatch({
                     : "border-[var(--border)] focus:border-[var(--primary)]"
                 }`}
               >
-                <option value="">Selecione uma comissária</option>
+                <option value="">
+                  Selecione uma comissária
+                </option>
+
                 <option value="cargo">
                   CargoFlow Despachos Aduaneiros Ltda.
                 </option>
-                <option value="atlas">Atlas Comissária</option>
-                <option value="global">Global Trade Services</option>
+
+                <option value="atlas">
+                  Atlas Comissária
+                </option>
+
+                <option value="global">
+                  Global Trade Services
+                </option>
               </select>
 
               {errors.broker && (
@@ -200,13 +224,18 @@ const exchangeCoverage = useWatch({
             </div>
           </div>
 
+          {/* Cobertura cambial */}
           <div>
             <div className="mb-2 flex items-center gap-2">
               <p className="text-sm font-medium text-[var(--text-primary)]">
-                Cobertura cambial <span className="text-red-500">*</span>
+                Cobertura cambial{" "}
+                <span className="text-red-500">*</span>
               </p>
 
-              <Info size={15} className="text-[var(--text-secondary)]" />
+              <Info
+                size={15}
+                className="text-[var(--text-secondary)]"
+              />
             </div>
 
             <div className="grid max-w-md grid-cols-2 overflow-hidden rounded-lg border border-[var(--border)]">
@@ -252,6 +281,7 @@ const exchangeCoverage = useWatch({
 
           <div className="h-px bg-[var(--border)]" />
 
+          {/* Arquivos */}
           <div>
             <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
               <div>
@@ -260,7 +290,8 @@ const exchangeCoverage = useWatch({
                 </h4>
 
                 <p className="mt-1 text-sm text-[var(--text-secondary)]">
-                  Envie os documentos exigidos para {processType}.
+                  Envie os documentos exigidos para{" "}
+                  {processType}.
                 </p>
               </div>
 
@@ -271,7 +302,9 @@ const exchangeCoverage = useWatch({
 
             <div className="mt-5 grid gap-4 lg:grid-cols-2">
               <UploadArea
-                title={isDuimp ? "PDF da DUIMP" : "PDF da DI"}
+                title={
+                  isDuimp ? "PDF da DUIMP" : "PDF da DI"
+                }
                 description="Arquivo obrigatório em formato PDF"
                 accept=".pdf"
                 file={pdfFile}
@@ -339,6 +372,7 @@ const exchangeCoverage = useWatch({
             </div>
           </div>
 
+          {/* Informação sobre processamento */}
           <div className="flex gap-3 rounded-lg bg-blue-50 px-4 py-3 text-sm text-blue-900">
             <Info
               size={18}
@@ -346,13 +380,38 @@ const exchangeCoverage = useWatch({
             />
 
             <p className="leading-6">
-              Após o envio, o processamento será realizado de forma
-              independente. Você poderá iniciar novas averbações enquanto esta
-              operação estiver em andamento.
+              Após o envio, o processamento será realizado de
+              forma independente. Você poderá iniciar novas
+              averbações enquanto esta operação estiver em
+              andamento.
             </p>
           </div>
+
+          {/* Erro retornado pela API */}
+          {submitError && (
+            <div
+              role="alert"
+              className="flex gap-3 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800"
+            >
+              <AlertCircle
+                size={18}
+                className="mt-0.5 shrink-0 text-red-600"
+              />
+
+              <div>
+                <p className="font-medium">
+                  Não foi possível enviar a averbação
+                </p>
+
+                <p className="mt-1 leading-6">
+                  {submitError}
+                </p>
+              </div>
+            </div>
+          )}
         </div>
 
+        {/* Ações */}
         <div className="flex flex-col-reverse gap-3 border-t border-[var(--border)] bg-slate-50/70 px-6 py-5 sm:flex-row sm:items-center sm:justify-between lg:px-8">
           <Button type="button" variant="secondary">
             Cancelar
@@ -365,7 +424,10 @@ const exchangeCoverage = useWatch({
           >
             {isSubmitting ? (
               <>
-                <LoaderCircle size={18} className="animate-spin" />
+                <LoaderCircle
+                  size={18}
+                  className="animate-spin"
+                />
                 Enviando...
               </>
             ) : (
@@ -402,7 +464,9 @@ function UploadArea({
     return (
       <div
         className={`rounded-xl border bg-white p-5 ${
-          error ? "border-[var(--error)]" : "border-[var(--border)]"
+          error
+            ? "border-[var(--error)]"
+            : "border-[var(--border)]"
         }`}
       >
         <div className="flex items-start justify-between gap-4">
@@ -450,7 +514,9 @@ function UploadArea({
     <div>
       <label
         className={`flex min-h-44 cursor-pointer flex-col items-center justify-center rounded-xl border border-dashed bg-slate-50/40 p-6 text-center transition hover:border-[var(--primary)] hover:bg-blue-50/40 ${
-          error ? "border-[var(--error)]" : "border-slate-300"
+          error
+            ? "border-[var(--error)]"
+            : "border-slate-300"
         }`}
       >
         <input
