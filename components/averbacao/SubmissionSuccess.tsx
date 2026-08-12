@@ -26,13 +26,11 @@ export function SubmissionSuccess({
 
   useEffect(() => {
     const timer = window.setTimeout(() => {
-      const lastDigit = Number(protocol.slice(-1));
-
-      setStatus(lastDigit % 2 === 0 ? "success" : "error");
+      setStatus("success");
     }, 3000);
 
     return () => window.clearTimeout(timer);
-  }, [protocol]);
+  }, []);
 
   const statusContent = {
     processing: {

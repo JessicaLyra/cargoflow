@@ -1,7 +1,6 @@
 "use client";
 
 import {
-  AlertCircle,
   Check,
   FileText,
   Info,
@@ -16,10 +15,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 
 import { Button } from "@/components/ui/Button";
 import { submitAverbacao } from "@/lib/api/averbacao";
-import {
-  averbacaoSchema,
-  type AverbacaoFormData,
-} from "@/lib/validations/averbacao";
+import { averbacaoSchema,type AverbacaoFormData } from "@/lib/validations/averbacao";
+import { FeedbackMessage } from "@/components/ui/FeedbackMessage";
 
 type AverbacaoFormProps = {
   onSuccess: (protocol: string) => void;
@@ -373,41 +370,18 @@ export function AverbacaoForm({
           </div>
 
           {/* Informação sobre processamento */}
-          <div className="flex gap-3 rounded-lg bg-blue-50 px-4 py-3 text-sm text-blue-900">
-            <Info
-              size={18}
-              className="mt-0.5 shrink-0 text-[var(--primary)]"
-            />
-
-            <p className="leading-6">
-              Após o envio, o processamento será realizado de
-              forma independente. Você poderá iniciar novas
-              averbações enquanto esta operação estiver em
-              andamento.
-            </p>
-          </div>
+          <FeedbackMessage
+            variant="info"
+            message="Após o envio, o processamento será realizado de forma independente. Você poderá iniciar novas averbações enquanto esta operação estiver em andamento."
+          />
 
           {/* Erro retornado pela API */}
           {submitError && (
-            <div
-              role="alert"
-              className="flex gap-3 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800"
-            >
-              <AlertCircle
-                size={18}
-                className="mt-0.5 shrink-0 text-red-600"
-              />
-
-              <div>
-                <p className="font-medium">
-                  Não foi possível enviar a averbação
-                </p>
-
-                <p className="mt-1 leading-6">
-                  {submitError}
-                </p>
-              </div>
-            </div>
+            <FeedbackMessage
+              variant="error"
+              title="Não foi possível enviar a averbação"
+              message={submitError}
+            />
           )}
         </div>
 

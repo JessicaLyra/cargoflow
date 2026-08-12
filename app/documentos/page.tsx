@@ -3,6 +3,7 @@
 import { useState } from "react";
 
 import { DocumentDetails } from "@/components/documentos/DocumentDetails";
+import { DocumentEmptyState } from "@/components/documentos/DocumentEmptyState";
 import { DocumentResults } from "@/components/documentos/DocumentResults";
 import { DocumentSearch } from "@/components/documentos/DocumentSearch";
 import { AppLayout } from "@/components/layout/AppLayout";
@@ -10,6 +11,7 @@ import type { DocumentOperation } from "@/types/document";
 
 export default function DocumentosPage() {
   const [results, setResults] = useState<DocumentOperation[]>([]);
+  const [hasSearched, setHasSearched] = useState(false);
   const [selectedOperation, setSelectedOperation] =
     useState<DocumentOperation | null>(null);
 
@@ -26,7 +28,8 @@ export default function DocumentosPage() {
           </h2>
 
           <p className="mt-2 max-w-2xl text-base leading-7 text-[var(--text-secondary)]">
-            Consulte operações por DTA, DI ou DUIMP e acompanhe os documentos e status relacionados.
+            Consulte operações por DTA, DI ou DUIMP e acompanhe os
+            documentos e status relacionados.
           </p>
         </div>
 
@@ -34,8 +37,11 @@ export default function DocumentosPage() {
           onResults={(documents) => {
             setResults(documents);
             setSelectedOperation(null);
+            setHasSearched(true);
           }}
         />
+
+        {!hasSearched && <DocumentEmptyState />}
 
         {results.length > 0 && (
           <DocumentResults

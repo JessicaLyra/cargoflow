@@ -1,38 +1,42 @@
 "use client";
 
-import { FileCheck2, ShieldCheck, LoaderCircle } from "lucide-react";
-import { Button } from "@/components/ui/Button";
-import { Input } from "@/components/ui/Input";
-import { Logo } from "@/components/ui/Logo";
-
-import { useState } from "react";
+import {
+  FileCheck2,
+  LoaderCircle,
+  ShieldCheck,
+} from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
+import { Button } from "@/components/ui/Button";
+import { Input } from "@/components/ui/Input";
+import { Logo } from "@/components/ui/Logo";
 import {
   loginSchema,
   type LoginFormData,
 } from "@/lib/validations/login";
 
 export default function LoginPage() {
-    const router = useRouter();
-    const [isLoading, setIsLoading] = useState(false);
+  const router = useRouter();
 
-    const {
-        register,
-        handleSubmit,
-        formState: { errors },
-    } = useForm<LoginFormData>({
-        resolver: zodResolver(loginSchema),
-    });
+  const {
+    register,
+    handleSubmit,
+    formState: {
+      errors,
+      isSubmitting,
+    },
+  } = useForm<LoginFormData>({
+    resolver: zodResolver(loginSchema),
+  });
 
-    async function onSubmit() {
-        setIsLoading(true);
-        await new Promise((resolve) => setTimeout(resolve, 2000)); // Simula uma requisição
-        setIsLoading(false);
-        router.push("/dashboard");
-    }
+  async function onSubmit() {
+    await new Promise((resolve) => setTimeout(resolve, 1200));
+
+    router.push("/dashboard");
+  }
+
   return (
     <main className="grid min-h-screen w-full lg:grid-cols-2">
       {/* Painel visual */}
@@ -108,10 +112,13 @@ export default function LoginPage() {
       </section>
 
       {/* Área de login */}
-    <section className="relative flex min-h-screen items-center justify-center overflow-hidden bg-[url('/images/bg-login.jpg')] bg-cover bg-center px-5 py-10 sm:px-10 lg:bg-none lg:bg-[var(--background)]">        {/* Detalhes sutis de fundo */}
+      <section className="relative flex min-h-screen items-center justify-center overflow-hidden bg-[url('/images/bg-login.jpg')] bg-cover bg-center px-5 py-10 sm:px-10 lg:bg-none lg:bg-[var(--background)]">
         <div className="absolute inset-0 bg-[#0F172A]/80 lg:hidden" />
+
         <div className="pointer-events-none absolute -right-32 -top-32 hidden size-80 rounded-full bg-blue-100/60 blur-3xl lg:block" />
+
         <div className="pointer-events-none absolute -bottom-40 -left-32 hidden size-96 rounded-full bg-slate-200/70 blur-3xl lg:block" />
+
         <div className="relative z-10 w-full max-w-md">
           {/* Logo mobile */}
           <div className="mb-8 flex justify-center lg:hidden">
@@ -134,7 +141,11 @@ export default function LoginPage() {
               </p>
             </div>
 
-            <form  onSubmit={handleSubmit(onSubmit)} className="space-y-5">
+            <form
+              onSubmit={handleSubmit(onSubmit)}
+              noValidate
+              className="space-y-5"
+            >
               <Input
                 id="email"
                 type="email"
@@ -156,20 +167,20 @@ export default function LoginPage() {
               />
 
               <div className="pt-2">
-                <Button type="submit"
-                    className="w-full"
-                    disabled={isLoading}
-                    >
-                    {isLoading && (
-                        <LoaderCircle
-                        size={18}
-                        className="animate-spin"
-                        aria-hidden="true"
-                        />
-                    )}
+                <Button
+                  type="submit"
+                  className="w-full"
+                  disabled={isSubmitting}
+                >
+                  {isSubmitting && (
+                    <LoaderCircle
+                      size={18}
+                      className="animate-spin"
+                      aria-hidden="true"
+                    />
+                  )}
 
-                    {isLoading ? "Entrando..." : "Entrar"}
-                  
+                  {isSubmitting ? "Entrando..." : "Entrar"}
                 </Button>
               </div>
             </form>
