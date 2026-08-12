@@ -1,12 +1,9 @@
 "use client";
 
-import {
-  AlertCircle,
-  LoaderCircle,
-  Search,
-} from "lucide-react";
+import { LoaderCircle, Search } from "lucide-react";
 import { useState } from "react";
 
+import { FeedbackMessage } from "@/components/ui/FeedbackMessage";
 import { searchDocuments } from "@/lib/api/documents";
 import type { DocumentOperation } from "@/types/document";
 
@@ -14,7 +11,9 @@ type DocumentSearchProps = {
   onResults: (results: DocumentOperation[]) => void;
 };
 
-export function DocumentSearch({ onResults }: DocumentSearchProps) {
+export function DocumentSearch({
+  onResults,
+}: DocumentSearchProps) {
   const [documentNumber, setDocumentNumber] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -32,7 +31,9 @@ export function DocumentSearch({ onResults }: DocumentSearchProps) {
   }
 
   async function handleSearch() {
-    const normalizedNumber = documentNumber.trim().toUpperCase();
+    const normalizedNumber = documentNumber
+      .trim()
+      .toUpperCase();
 
     if (!normalizedNumber) {
       setError("Informe uma DTA, DI ou DUIMP.");
@@ -51,13 +52,28 @@ export function DocumentSearch({ onResults }: DocumentSearchProps) {
     setError(null);
     setIsLoading(true);
 
-    const results = await searchDocuments(normalizedNumber);
+    try {
+      const results = await searchDocuments(
+        normalizedNumber,
+      );
 
-    setIsLoading(false);
-    onResults(results);
+      onResults(results);
 
-    if (results.length === 0) {
-      setError("Nenhum documento encontrado para o número informado.");
+      if (results.length === 0) {
+        setError(
+          "Nenhum documento encontrado para o número informado.",
+        );
+      }
+    } catch (error) {
+      const message =
+        error instanceof Error
+          ? error.message
+          : "Não foi possível realizar a consulta.";
+
+      setError(message);
+      onResults([]);
+    } finally {
+      setIsLoading(false);
     }
   }
 
@@ -69,19 +85,26 @@ export function DocumentSearch({ onResults }: DocumentSearchProps) {
         </p>
 
         <p className="mt-1 text-sm text-[var(--text-secondary)]">
-          Informe uma DTA, DI ou DUIMP para localizar os documentos relacionados.
+          Informe uma DTA, DI ou DUIMP para localizar os
+          documentos relacionados.
         </p>
       </div>
 
       <div className="p-5 sm:p-6">
         <div className="flex flex-col gap-4 lg:flex-row lg:items-start">
           <div className="flex-1">
-            <label htmlFor="documentNumber" className="mb-2 block text-sm font-medium text-[var(--text-primary)]">
+            <label
+              htmlFor="documentNumber"
+              className="mb-2 block text-sm font-medium text-[var(--text-primary)]"
+            >
               DTA, DI ou DUIMP
             </label>
 
             <div className="relative">
-              <Search size={19} className="absolute left-4 top-1/2 -translate-y-1/2 text-[var(--text-secondary)]" />
+              <Search
+                size={19}
+                className="absolute left-4 top-1/2 -translate-y-1/2 text-[var(--text-secondary)]"
+              />
 
               <input
                 id="documentNumber"
@@ -106,13 +129,16 @@ export function DocumentSearch({ onResults }: DocumentSearchProps) {
             </div>
 
             <p className="mt-2 text-xs text-[var(--text-secondary)]">
-              DTA/DI: 25/0000000-1 · DUIMP: 26BR0000123456-7
+              DTA/DI: 25/0000000-1 · DUIMP:
+              26BR0000123456-7
             </p>
 
             {error && (
-              <div className="mt-2 flex items-center gap-2 text-sm text-[var(--error)]">
-                <AlertCircle size={16} />
-                {error}
+              <div className="mt-3">
+                <FeedbackMessage
+                  variant="error"
+                  message={error}
+                />
               </div>
             )}
           </div>
@@ -125,7 +151,10 @@ export function DocumentSearch({ onResults }: DocumentSearchProps) {
           >
             {isLoading ? (
               <>
-                <LoaderCircle size={18} className="animate-spin" />
+                <LoaderCircle
+                  size={18}
+                  className="animate-spin"
+                />
                 Consultando...
               </>
             ) : (
