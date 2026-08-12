@@ -137,7 +137,6 @@ export default function LoginPage() {
             <form  onSubmit={handleSubmit(onSubmit)} className="space-y-5">
               <Input
                 id="email"
-                name="email"
                 type="email"
                 label="E-mail"
                 placeholder="nome@empresa.com.br"
@@ -148,7 +147,6 @@ export default function LoginPage() {
 
               <Input
                 id="password"
-                name="password"
                 type="password"
                 label="Senha"
                 placeholder="Digite sua senha"

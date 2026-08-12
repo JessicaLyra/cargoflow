@@ -1,0 +1,104 @@
+import type { DocumentOperation } from "@/types/document";
+
+const documents: DocumentOperation[] = [
+  {
+    id: "1",
+    documentType: "DTA",
+    documentNumber: "25/0004821-7",
+    dta: "25/0004821-7",
+    importer: "Global Parts Importação Ltda.",
+    country: "China",
+    modal: "Marítimo",
+    knowledgeNumber: "COSU6385921450",
+    createdAt: "22/05/2025",
+    status: "COMPLETED",
+    files: [
+      {
+        name: "dta-25-0004821-7.pdf",
+        type: "PDF",
+        size: "1,4 MB",
+        url: "/documents/dta-25-0004821-7.pdf",
+      },
+    ],
+  },
+  {
+    id: "2",
+    documentType: "DUIMP",
+    documentNumber: "26BR0000123456-7",
+    dta: "25/0004821-7",
+    importer: "Global Parts Importação Ltda.",
+    country: "China",
+    modal: "Marítimo",
+    knowledgeNumber: "COSU6385921450",
+    createdAt: "22/05/2025",
+    status: "COMPLETED",
+    files: [
+      {
+        name: "duimp-26BR0000123456-7.pdf",
+        type: "PDF",
+        size: "2,1 MB",
+        url: "/documents/duimp-26BR0000123456-7.pdf",
+      },
+    ],
+  },
+  {
+    id: "3",
+    documentType: "DI",
+    documentNumber: "25/9876543-1",
+    dta: "25/0001842-7",
+    importer: "Atlas Comércio Exterior Ltda.",
+    country: "Estados Unidos",
+    modal: "Aéreo",
+    knowledgeNumber: "AWB987654321",
+    createdAt: "18/06/2025",
+    status: "PROCESSING",
+    files: [
+      {
+        name: "di-25-9876543-1.pdf",
+        type: "PDF",
+        size: "1,8 MB",
+        url: "/documents/di-25-9876543-1.pdf",
+      },
+      {
+        name: "di-25-9876543-1.xml",
+        type: "XML",
+        size: "420 KB",
+        url: "/documents/di-25-9876543-1.xml",
+      },
+    ],
+  },
+  {
+    id: "4",
+    documentType: "DTA",
+    documentNumber: "25/0003510-4",
+    dta: "25/0003510-4",
+    importer: "Mercosul Trading Ltda.",
+    country: "Chile",
+    modal: "Rodoviário",
+    knowledgeNumber: "CRT457896321",
+    createdAt: "04/07/2025",
+    status: "FAILED",
+    files: [
+      {
+        name: "dta-25-0003510-4.pdf",
+        type: "PDF",
+        size: "1,2 MB",
+        url: "/documents/dta-25-0003510-4.pdf",
+      },
+    ],
+  },
+];
+
+export async function searchDocuments(
+  number: string,
+): Promise<DocumentOperation[]> {
+  await new Promise((resolve) => setTimeout(resolve, 800));
+
+  const normalizedNumber = number.trim().toUpperCase();
+
+  return documents.filter(
+    (document) =>
+      document.documentNumber.toUpperCase() === normalizedNumber ||
+      document.dta.toUpperCase() === normalizedNumber,
+  );
+}
