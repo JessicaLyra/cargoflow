@@ -1,4 +1,4 @@
-import { Bell, Menu } from "lucide-react";
+import { Menu } from "lucide-react";
 
 type HeaderProps = {
   onMenuClick: () => void;
@@ -23,15 +23,6 @@ export function Header({ onMenuClick }: HeaderProps) {
         </div>
 
         <div className="flex shrink-0 items-center gap-2 sm:gap-3">
-          <button
-            type="button"
-            aria-label="Notificações"
-            className="relative flex size-10 cursor-pointer items-center justify-center rounded-lg text-[var(--text-secondary)] transition-colors hover:bg-slate-100 hover:text-[var(--text-primary)]"
-          >
-            <Bell size={20} />
-
-            <span className="absolute right-2.5 top-2.5 size-2 rounded-full border-2 border-white bg-red-500" />
-          </button>
 
           <div className="hidden h-8 w-px bg-[var(--border)] sm:block" />
 
