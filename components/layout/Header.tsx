@@ -1,4 +1,4 @@
-import { Bell, Menu, Search } from "lucide-react";
+import { Bell, Menu } from "lucide-react";
 
 type HeaderProps = {
   onMenuClick: () => void;
@@ -18,28 +18,8 @@ export function Header({ onMenuClick }: HeaderProps) {
             <Menu size={22} />
           </button>
 
-          <div className="relative hidden w-full max-w-xl md:block">
-            <Search
-              size={18}
-              strokeWidth={1.8}
-              className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400"
-            />
 
-            <input
-              type="search"
-              placeholder="Buscar por DTA, DI ou DUIMP..."
-              aria-label="Buscar documentos"
-              className="h-11 w-full rounded-xl border border-[var(--border)] bg-slate-50/70 pl-11 pr-4 text-sm text-[var(--text-primary)] outline-none transition-colors placeholder:text-slate-400 focus:border-[var(--primary)] focus:bg-white focus:ring-2 focus:ring-blue-100"
-            />
-          </div>
-
-          <button
-            type="button"
-            aria-label="Buscar documentos"
-            className="flex size-10 cursor-pointer items-center justify-center rounded-lg text-[var(--text-secondary)] transition-colors hover:bg-slate-100 hover:text-[var(--text-primary)] md:hidden"
-          >
-            <Search size={20} />
-          </button>
+          
         </div>
 
         <div className="flex shrink-0 items-center gap-2 sm:gap-3">
