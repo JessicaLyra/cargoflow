@@ -17,7 +17,7 @@ export default function DocumentosPage() {
 
   return (
     <AppLayout>
-      <div className="space-y-6">
+      <div className="space-y-6 animate-fade-up">
         <div>
           <p className="text-sm font-medium text-[var(--primary)]">
             Documentos

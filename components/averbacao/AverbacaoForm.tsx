@@ -4,6 +4,7 @@ import {
   Check,
   FileText,
   Info,
+  KeyRound,
   LoaderCircle,
   Send,
   UploadCloud,
@@ -14,9 +15,12 @@ import { useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 import { Button } from "@/components/ui/Button";
-import { submitAverbacao } from "@/lib/api/averbacao";
-import { averbacaoSchema,type AverbacaoFormData } from "@/lib/validations/averbacao";
 import { FeedbackMessage } from "@/components/ui/FeedbackMessage";
+import { submitAverbacao } from "@/lib/api/averbacao";
+import {
+  averbacaoSchema,
+  type AverbacaoFormData,
+} from "@/lib/validations/averbacao";
 
 type AverbacaoFormProps = {
   onSuccess: (protocol: string) => void;
@@ -94,26 +98,40 @@ export function AverbacaoForm({
   }
 
   return (
-    <section className="overflow-hidden rounded-xl border border-[var(--border)] bg-white shadow-sm">
-      <div className="border-b border-[var(--border)] px-6 py-5 lg:px-8">
-        <p className="text-sm font-medium text-[var(--primary)]">
+    <section className="overflow-hidden rounded-2xl border border-[var(--border)] bg-[var(--surface)] shadow-sm">
+      {/* Cabeçalho */}
+      <div className="border-b border-[var(--border)] px-6 py-6 lg:px-8">
+        <p className="text-sm font-semibold uppercase tracking-[0.16em] text-[var(--primary)]">
           Dados do processo
         </p>
 
-        <h3 className="mt-1 text-xl font-semibold text-[var(--text-primary)]">
+        <h3 className="mt-2 text-2xl font-semibold tracking-tight text-[var(--text-primary)]">
           Informações para averbação
         </h3>
+
+        <p className="mt-2 max-w-2xl text-base leading-7 text-[var(--text-secondary)]">
+          Defina o tipo de processo e envie os documentos necessários para
+          iniciar a averbação.
+        </p>
       </div>
 
       <form onSubmit={handleSubmit(onSubmit)}>
         <div className="space-y-8 p-6 lg:p-8">
           {/* Tipo de processo */}
           <div>
-            <p className="mb-3 text-sm font-medium text-[var(--text-primary)]">
-              Tipo de processo
-            </p>
+            <div className="mb-3 flex items-center justify-between gap-4">
+              <div>
+                <p className="text-base font-semibold text-[var(--text-primary)]">
+                  Tipo de processo
+                </p>
 
-            <div className="grid overflow-hidden rounded-lg border border-[var(--border)] sm:grid-cols-2">
+                <p className="mt-1 text-sm text-[var(--text-secondary)]">
+                  Selecione o documento que será utilizado na operação.
+                </p>
+              </div>
+            </div>
+
+            <div className="grid overflow-hidden rounded-xl border border-[var(--border)] bg-[var(--surface-secondary)] p-1 sm:grid-cols-2">
               <button
                 type="button"
                 onClick={() =>
@@ -121,13 +139,14 @@ export function AverbacaoForm({
                     shouldValidate: true,
                   })
                 }
-                className={`flex h-11 cursor-pointer items-center justify-center gap-2 text-sm font-medium transition ${
+                aria-pressed={processType === "DUIMP"}
+                className={`flex h-12 cursor-pointer items-center justify-center gap-2 rounded-lg text-sm font-semibold transition ${
                   processType === "DUIMP"
-                    ? "bg-[var(--primary)] text-white"
-                    : "bg-white text-[var(--text-secondary)] hover:bg-slate-50"
+                    ? "bg-[var(--primary)] text-white shadow-sm"
+                    : "text-[var(--text-secondary)] hover:bg-white hover:text-[var(--text-primary)]"
                 }`}
               >
-                <FileText size={17} />
+                <FileText size={18} aria-hidden="true" />
                 DUIMP
               </button>
 
@@ -138,13 +157,14 @@ export function AverbacaoForm({
                     shouldValidate: true,
                   })
                 }
-                className={`flex h-11 cursor-pointer items-center justify-center gap-2 border-t border-[var(--border)] text-sm font-medium transition sm:border-l sm:border-t-0 ${
+                aria-pressed={processType === "DI"}
+                className={`flex h-12 cursor-pointer items-center justify-center gap-2 rounded-lg text-sm font-semibold transition ${
                   processType === "DI"
-                    ? "bg-[var(--primary)] text-white"
-                    : "bg-white text-[var(--text-secondary)] hover:bg-slate-50"
+                    ? "bg-[var(--primary)] text-white shadow-sm"
+                    : "text-[var(--text-secondary)] hover:bg-white hover:text-[var(--text-primary)]"
                 }`}
               >
-                <FileText size={17} />
+                <FileText size={18} aria-hidden="true" />
                 DI
               </button>
             </div>
@@ -156,21 +176,20 @@ export function AverbacaoForm({
             )}
           </div>
 
-          {/* Comissária e referência */}
+          {/* Dados principais */}
           <div className="grid gap-5 lg:grid-cols-2">
             <div>
               <label
                 htmlFor="broker"
-                className="mb-2 block text-sm font-medium text-[var(--text-primary)]"
+                className="mb-2 block text-sm font-semibold text-[var(--text-primary)]"
               >
-                Comissária{" "}
-                <span className="text-red-500">*</span>
+                Comissária <span className="text-[var(--error)]">*</span>
               </label>
 
               <select
                 id="broker"
                 {...register("broker")}
-                className={`h-11 w-full cursor-pointer rounded-lg border bg-white px-3 text-sm text-[var(--text-primary)] outline-none transition-colors focus:ring-2 focus:ring-blue-100 ${
+                className={`h-12 w-full cursor-pointer rounded-xl border bg-white px-4 text-sm text-[var(--text-primary)] outline-none transition focus:ring-2 focus:ring-blue-100 ${
                   errors.broker
                     ? "border-[var(--error)] focus:border-[var(--error)]"
                     : "border-[var(--border)] focus:border-[var(--primary)]"
@@ -203,7 +222,7 @@ export function AverbacaoForm({
             <div>
               <label
                 htmlFor="referenceCode"
-                className="mb-2 block text-sm font-medium text-[var(--text-primary)]"
+                className="mb-2 block text-sm font-semibold text-[var(--text-primary)]"
               >
                 Código de referência{" "}
                 <span className="font-normal text-[var(--text-secondary)]">
@@ -216,26 +235,33 @@ export function AverbacaoForm({
                 type="text"
                 {...register("referenceCode")}
                 placeholder="Ex.: REF-2026-0001"
-                className="h-11 w-full rounded-lg border border-[var(--border)] bg-white px-3 text-sm text-[var(--text-primary)] outline-none placeholder:text-slate-400 focus:border-[var(--primary)] focus:ring-2 focus:ring-blue-100"
+                className="h-12 w-full rounded-xl border border-[var(--border)] bg-white px-4 text-sm text-[var(--text-primary)] outline-none placeholder:text-[var(--text-muted)] focus:border-[var(--primary)] focus:ring-2 focus:ring-blue-100"
               />
             </div>
           </div>
 
           {/* Cobertura cambial */}
           <div>
-            <div className="mb-2 flex items-center gap-2">
-              <p className="text-sm font-medium text-[var(--text-primary)]">
-                Cobertura cambial{" "}
-                <span className="text-red-500">*</span>
-              </p>
+            <div className="mb-3 flex items-center gap-2">
+              <div>
+                <p className="text-base font-semibold text-[var(--text-primary)]">
+                  Cobertura cambial{" "}
+                  <span className="text-[var(--error)]">*</span>
+                </p>
+
+                <p className="mt-1 text-sm text-[var(--text-secondary)]">
+                  Informe se a operação possui cobertura cambial.
+                </p>
+              </div>
 
               <Info
-                size={15}
+                size={16}
+                aria-hidden="true"
                 className="text-[var(--text-secondary)]"
               />
             </div>
 
-            <div className="grid max-w-md grid-cols-2 overflow-hidden rounded-lg border border-[var(--border)]">
+            <div className="grid max-w-md grid-cols-2 overflow-hidden rounded-xl border border-[var(--border)] bg-[var(--surface-secondary)] p-1">
               <button
                 type="button"
                 onClick={() =>
@@ -243,10 +269,11 @@ export function AverbacaoForm({
                     shouldValidate: true,
                   })
                 }
-                className={`h-10 cursor-pointer text-sm font-medium transition ${
+                aria-pressed={exchangeCoverage === "no"}
+                className={`h-11 cursor-pointer rounded-lg text-sm font-semibold transition ${
                   exchangeCoverage === "no"
-                    ? "bg-blue-50 text-[var(--primary)] ring-1 ring-inset ring-[var(--primary)]"
-                    : "text-[var(--text-secondary)] hover:bg-slate-50"
+                    ? "bg-white text-[var(--primary)] shadow-sm ring-1 ring-inset ring-[var(--primary)]/20"
+                    : "text-[var(--text-secondary)] hover:text-[var(--text-primary)]"
                 }`}
               >
                 Não
@@ -259,10 +286,11 @@ export function AverbacaoForm({
                     shouldValidate: true,
                   })
                 }
-                className={`h-10 cursor-pointer border-l border-[var(--border)] text-sm font-medium transition ${
+                aria-pressed={exchangeCoverage === "yes"}
+                className={`h-11 cursor-pointer rounded-lg text-sm font-semibold transition ${
                   exchangeCoverage === "yes"
-                    ? "bg-blue-50 text-[var(--primary)] ring-1 ring-inset ring-[var(--primary)]"
-                    : "text-[var(--text-secondary)] hover:bg-slate-50"
+                    ? "bg-white text-[var(--primary)] shadow-sm ring-1 ring-inset ring-[var(--primary)]/20"
+                    : "text-[var(--text-secondary)] hover:text-[var(--text-primary)]"
                 }`}
               >
                 Sim
@@ -280,19 +308,22 @@ export function AverbacaoForm({
 
           {/* Arquivos */}
           <div>
-            <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+            <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
               <div>
-                <h4 className="text-base font-semibold text-[var(--text-primary)]">
+                <p className="text-sm font-semibold uppercase tracking-[0.14em] text-[var(--primary)]">
+                  Documentação
+                </p>
+
+                <h4 className="mt-2 text-xl font-semibold text-[var(--text-primary)]">
                   Arquivos obrigatórios
                 </h4>
 
-                <p className="mt-1 text-sm text-[var(--text-secondary)]">
-                  Envie os documentos exigidos para{" "}
-                  {processType}.
+                <p className="mt-2 text-sm leading-6 text-[var(--text-secondary)]">
+                  Envie os documentos exigidos para {processType}.
                 </p>
               </div>
 
-              <p className="text-sm text-[var(--text-secondary)]">
+              <p className="text-sm font-medium text-[var(--text-secondary)]">
                 Formatos aceitos conforme o tipo de documento
               </p>
             </div>
@@ -315,31 +346,39 @@ export function AverbacaoForm({
 
               {isDuimp ? (
                 <div
-                  className={`rounded-xl border border-dashed bg-slate-50/40 p-5 ${
+                  className={`rounded-2xl border bg-[var(--surface-secondary)]/45 p-5 ${
                     errors.accessKey
                       ? "border-[var(--error)]"
-                      : "border-slate-300"
+                      : "border-[var(--border)]"
                   }`}
                 >
-                  <div className="flex items-center gap-2">
-                    <p className="text-sm font-medium text-[var(--text-primary)]">
-                      Chave de acesso
-                    </p>
+                  <div className="flex items-start gap-3">
+                    <div className="flex size-11 shrink-0 items-center justify-center rounded-xl bg-[var(--primary-light)] text-[var(--primary)]">
+                      <KeyRound size={20} aria-hidden="true" />
+                    </div>
 
-                    <span className="rounded-full bg-red-50 px-2 py-0.5 text-xs font-medium text-red-600">
-                      Obrigatório
-                    </span>
+                    <div>
+                      <div className="flex flex-wrap items-center gap-2">
+                        <p className="text-base font-semibold text-[var(--text-primary)]">
+                          Chave de acesso
+                        </p>
+
+                        <span className="rounded-full bg-[var(--error-light)] px-2.5 py-1 text-xs font-semibold text-[var(--error)]">
+                          Obrigatório
+                        </span>
+                      </div>
+
+                      <p className="mt-1 text-sm leading-6 text-[var(--text-secondary)]">
+                        Informe a chave correspondente à DUIMP.
+                      </p>
+                    </div>
                   </div>
-
-                  <p className="mt-1 text-sm text-[var(--text-secondary)]">
-                    Informe a chave correspondente à DUIMP.
-                  </p>
 
                   <input
                     type="text"
                     {...register("accessKey")}
                     placeholder="Digite a chave de acesso"
-                    className={`mt-5 h-11 w-full rounded-lg border bg-white px-3 text-sm text-[var(--text-primary)] outline-none focus:ring-2 focus:ring-blue-100 ${
+                    className={`mt-5 h-12 w-full rounded-xl border bg-white px-4 text-sm text-[var(--text-primary)] outline-none placeholder:text-[var(--text-muted)] focus:ring-2 focus:ring-blue-100 ${
                       errors.accessKey
                         ? "border-[var(--error)] focus:border-[var(--error)]"
                         : "border-[var(--border)] focus:border-[var(--primary)]"
@@ -386,27 +425,34 @@ export function AverbacaoForm({
         </div>
 
         {/* Ações */}
-        <div className="flex flex-col-reverse gap-3 border-t border-[var(--border)] bg-slate-50/70 px-6 py-5 sm:flex-row sm:items-center sm:justify-between lg:px-8">
-          <Button type="button" variant="secondary">
+        <div className="flex flex-col-reverse gap-3 border-t border-[var(--border)] bg-[var(--surface-secondary)]/55 px-6 py-5 sm:flex-row sm:items-center sm:justify-between lg:px-8">
+          <Button
+            type="button"
+            variant="secondary"
+            className="h-12 px-5"
+          >
             Cancelar
           </Button>
 
           <Button
             type="submit"
+            variant="action"
             disabled={isSubmitting}
-            className="gap-2"
+            aria-busy={isSubmitting}
+            className="h-12 gap-2 px-6 text-base font-semibold"
           >
             {isSubmitting ? (
               <>
                 <LoaderCircle
                   size={18}
                   className="animate-spin"
+                  aria-hidden="true"
                 />
                 Enviando...
               </>
             ) : (
               <>
-                <Send size={18} />
+                <Send size={18} aria-hidden="true" />
                 Enviar para averbação
               </>
             )}
@@ -437,20 +483,20 @@ function UploadArea({
   if (file) {
     return (
       <div
-        className={`rounded-xl border bg-white p-5 ${
+        className={`rounded-2xl border bg-white p-5 ${
           error
             ? "border-[var(--error)]"
             : "border-[var(--border)]"
         }`}
       >
         <div className="flex items-start justify-between gap-4">
-          <div className="flex min-w-0 items-center gap-3">
-            <div className="flex size-10 shrink-0 items-center justify-center rounded-lg bg-red-50 text-red-600">
-              <FileText size={19} />
+          <div className="flex min-w-0 items-center gap-4">
+            <div className="flex size-11 shrink-0 items-center justify-center rounded-xl bg-[var(--error-light)] text-[var(--error)]">
+              <FileText size={20} aria-hidden="true" />
             </div>
 
             <div className="min-w-0">
-              <p className="truncate text-sm font-medium text-[var(--text-primary)]">
+              <p className="truncate text-base font-semibold text-[var(--text-primary)]">
                 {file.name}
               </p>
 
@@ -464,14 +510,14 @@ function UploadArea({
             type="button"
             onClick={() => onChange(null)}
             aria-label="Remover arquivo"
-            className="flex size-8 shrink-0 cursor-pointer items-center justify-center rounded-full bg-slate-100 text-slate-500 hover:bg-red-50 hover:text-red-600"
+            className="flex size-9 shrink-0 cursor-pointer items-center justify-center rounded-full bg-[var(--surface-secondary)] text-[var(--text-secondary)] transition hover:bg-[var(--error-light)] hover:text-[var(--error)]"
           >
-            <X size={16} />
+            <X size={17} aria-hidden="true" />
           </button>
         </div>
 
-        <div className="mt-4 flex items-center gap-2 text-sm font-medium text-green-700">
-          <Check size={17} />
+        <div className="mt-5 flex items-center gap-2 rounded-xl bg-[var(--success-light)] px-3 py-2.5 text-sm font-semibold text-[var(--success-dark)]">
+          <Check size={17} aria-hidden="true" />
           Arquivo selecionado
         </div>
 
@@ -487,10 +533,10 @@ function UploadArea({
   return (
     <div>
       <label
-        className={`flex min-h-44 cursor-pointer flex-col items-center justify-center rounded-xl border border-dashed bg-slate-50/40 p-6 text-center transition hover:border-[var(--primary)] hover:bg-blue-50/40 ${
+        className={`group flex min-h-48 cursor-pointer flex-col items-center justify-center rounded-2xl border border-dashed bg-[var(--surface-secondary)]/35 p-6 text-center transition ${
           error
             ? "border-[var(--error)]"
-            : "border-slate-300"
+            : "border-[var(--border-strong)] hover:border-[var(--primary)] hover:bg-[var(--primary-light)]/45"
         }`}
       >
         <input
@@ -502,19 +548,19 @@ function UploadArea({
           }
         />
 
-        <div className="flex size-11 items-center justify-center rounded-full bg-blue-50 text-[var(--primary)]">
-          <UploadCloud size={21} />
+        <div className="flex size-12 items-center justify-center rounded-2xl bg-[var(--primary-light)] text-[var(--primary)] transition-transform duration-200 group-hover:-translate-y-1">
+          <UploadCloud size={22} aria-hidden="true" />
         </div>
 
-        <p className="mt-4 text-sm font-medium text-[var(--text-primary)]">
-          {title} <span className="text-red-500">*</span>
+        <p className="mt-4 text-base font-semibold text-[var(--text-primary)]">
+          {title} <span className="text-[var(--error)]">*</span>
         </p>
 
-        <p className="mt-1 text-sm text-[var(--text-secondary)]">
+        <p className="mt-2 max-w-xs text-sm leading-6 text-[var(--text-secondary)]">
           {description}
         </p>
 
-        <span className="mt-4 rounded-lg border border-[var(--border)] bg-white px-3 py-2 text-sm font-medium text-[var(--text-primary)]">
+        <span className="mt-5 rounded-xl border border-[var(--border)] bg-white px-4 py-2.5 text-sm font-semibold text-[var(--text-primary)] shadow-sm transition group-hover:border-[var(--primary)] group-hover:text-[var(--primary)]">
           Selecionar arquivo
         </span>
       </label>

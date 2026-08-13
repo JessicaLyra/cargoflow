@@ -1,7 +1,7 @@
 import { ButtonHTMLAttributes } from "react";
 
 type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & {
-  variant?: "primary" | "secondary" | "danger";
+  variant?: "primary" | "action" | "secondary" | "danger";
 };
 
 export function Button({
@@ -12,6 +12,8 @@ export function Button({
   const variants = {
     primary:
       "bg-[var(--primary)] text-white hover:bg-[var(--primary-hover)]",
+    action:
+      "bg-[var(--action)] text-white hover:bg-[var(--action-hover)]",
     secondary:
       "border border-[var(--border)] bg-white text-[var(--text-primary)] hover:bg-slate-50",
     danger: "bg-[var(--error)] text-white hover:opacity-90",
