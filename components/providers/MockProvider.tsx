@@ -8,16 +8,12 @@ type MockProviderProps = {
 
 let mockingPromise: Promise<void> | null = null;
 
-export function MockProvider({ children }: MockProviderProps) {
-  const [isReady, setIsReady] = useState(
-    process.env.NODE_ENV === "production",
-  );
+export function MockProvider({
+  children,
+}: MockProviderProps) {
+  const [isReady, setIsReady] = useState(false);
 
   useEffect(() => {
-    if (process.env.NODE_ENV === "production") {
-      return;
-    }
-
     async function enableMocking() {
       if (!mockingPromise) {
         mockingPromise = import("@/mocks/browser").then(
