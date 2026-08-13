@@ -1,9 +1,12 @@
 import {
   AlertCircle,
+  CalendarDays,
   CheckCircle2,
   ChevronRight,
   Clock3,
+  FileStack,
   FileText,
+  Globe2,
   Plane,
   Ship,
   Truck,
@@ -29,17 +32,22 @@ const statusConfig: Record<
 > = {
   PROCESSING: {
     label: "Em processamento",
-    className: "bg-amber-50 text-amber-700 ring-amber-200",
+    className:
+      "bg-[var(--warning-light)] text-[var(--warning-dark)] ring-amber-200",
     icon: Clock3,
   },
+
   COMPLETED: {
     label: "Concluído",
-    className: "bg-green-50 text-green-700 ring-green-200",
+    className:
+      "bg-[var(--success-light)] text-[var(--success-dark)] ring-green-200",
     icon: CheckCircle2,
   },
+
   FAILED: {
     label: "Falha",
-    className: "bg-red-50 text-red-700 ring-red-200",
+    className:
+      "bg-[var(--error-light)] text-[var(--error-dark)] ring-red-200",
     icon: AlertCircle,
   },
 };
@@ -49,25 +57,38 @@ export function DocumentResults({
   onSelect,
 }: DocumentResultsProps) {
   return (
-    <section className="overflow-hidden rounded-xl border border-[var(--border)] bg-white shadow-sm">
-      <div className="flex items-center justify-between border-b border-[var(--border)] px-5 py-4 sm:px-6">
+    <section className="space-y-4">
+      {/* Cabeçalho */}
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
         <div>
-          <p className="text-sm font-semibold text-[var(--text-primary)]">
-            Operações encontradas
+          <p className="text-sm font-semibold uppercase tracking-[0.14em] text-[var(--primary)]">
+            Resultado
           </p>
 
-          <p className="mt-1 text-sm text-[var(--text-secondary)]">
-            {operations.length}{" "}
-            {operations.length === 1 ? "resultado" : "resultados"}
-          </p>
+          <h3 className="mt-1 text-2xl font-semibold tracking-tight text-[var(--text-primary)]">
+            Operações encontradas
+          </h3>
         </div>
 
-        <div className="flex size-10 items-center justify-center rounded-lg bg-blue-50 text-[var(--primary)]">
-          <FileText size={19} />
+        <div className="flex w-fit items-center gap-2 rounded-full bg-[var(--surface-secondary)] px-3 py-1.5">
+          <FileStack
+            size={16}
+            className="text-[var(--primary)]"
+            aria-hidden="true"
+          />
+
+          <span className="text-sm font-semibold text-[var(--text-primary)]">
+            {operations.length}
+          </span>
+
+          <span className="text-sm text-[var(--text-secondary)]">
+            {operations.length === 1 ? "resultado" : "resultados"}
+          </span>
         </div>
       </div>
 
-      <div className="divide-y divide-[var(--border)]">
+      {/* Cards */}
+      <div className="space-y-3">
         {operations.map((operation) => {
           const status = statusConfig[operation.status];
           const StatusIcon = status.icon;
@@ -79,118 +100,173 @@ export function DocumentResults({
                 ? Truck
                 : Ship;
 
+          const modalClass =
+            operation.modal === "Aéreo"
+              ? "bg-violet-50 text-violet-700 ring-violet-200"
+              : operation.modal === "Rodoviário"
+                ? "bg-orange-50 text-orange-700 ring-orange-200"
+                : "bg-blue-50 text-blue-700 ring-blue-200";
+
           return (
             <button
               key={operation.id}
               type="button"
               onClick={() => onSelect(operation)}
-              className="group grid w-full cursor-pointer gap-5 px-5 py-5 text-left transition hover:bg-slate-50/70 sm:px-6 lg:grid-cols-[minmax(230px,1.4fr)_minmax(170px,1fr)_130px_120px] lg:items-center xl:grid-cols-[minmax(240px,1.4fr)_minmax(180px,1fr)_130px_120px_150px_110px_24px]"
+              className="group relative w-full cursor-pointer overflow-hidden rounded-2xl bg-[var(--surface)] text-left shadow-sm ring-1 ring-[var(--border)] transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md hover:ring-blue-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--primary)] focus-visible:ring-offset-2"
             >
-              <div className="min-w-0">
-                <div className="flex flex-wrap items-center gap-2">
-                  <span className="rounded-md bg-slate-100 px-2 py-1 text-xs font-semibold text-slate-600">
-                    {operation.documentType}
-                  </span>
-
-                  <p className="font-mono text-sm font-semibold text-[var(--text-primary)]">
-                    {operation.documentNumber}
-                  </p>
-                </div>
-
-                <p className="mt-2 truncate text-sm font-medium text-[var(--text-primary)]">
-                  {operation.importer}
-                </p>
-
-                <p className="mt-1 font-mono text-xs text-[var(--text-secondary)]">
-                  DTA {operation.dta}
-                </p>
-              </div>
-
-              <div>
-                <p className="text-xs font-medium uppercase tracking-wide text-slate-400">
-                  País de origem
-                </p>
-
-                <p className="mt-2 text-sm font-medium text-[var(--text-primary)]">
-                  {operation.country}
-                </p>
-
-                <p className="mt-1 font-mono text-xs text-[var(--text-secondary)]">
-                  {operation.knowledgeNumber}
-                </p>
-              </div>
-
-              <div>
-                <p className="text-xs font-medium uppercase tracking-wide text-slate-400">
-                  Data do envio
-                </p>
-
-                <p className="mt-2 text-sm font-medium text-[var(--text-primary)]">
-                  {operation.createdAt}
-                </p>
-              </div>
-
-              <div>
-                <p className="text-xs font-medium uppercase tracking-wide text-slate-400">
-                  Modal
-                </p>
-
-                <div className="mt-2 flex items-center gap-2 text-sm font-medium text-[var(--text-primary)]">
-                  <ModalIcon
-                    size={17}
-                    className="text-[var(--primary)]"
-                  />
-
-                  {operation.modal}
-                </div>
-              </div>
-
-              <div>
-                <p className="text-xs font-medium uppercase tracking-wide text-slate-400">
-                  Status
-                </p>
-
-                <div className="mt-2">
-                  <span
-                    className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-semibold ring-1 ring-inset ${status.className}`}
-                  >
-                    <StatusIcon size={14} />
-                    {status.label}
-                  </span>
-                </div>
-              </div>
-
-              <div>
-                <p className="text-xs font-medium uppercase tracking-wide text-slate-400">
-                  Arquivos
-                </p>
-
-                <div className="mt-2 flex items-center gap-2">
-                  <FileText
-                    size={16}
-                    className="text-[var(--primary)]"
-                  />
-
-                  <span className="text-sm font-medium text-[var(--text-primary)]">
-                    {operation.files.length}
-                  </span>
-
-                  <span className="text-xs text-[var(--text-secondary)]">
-                    {operation.files.length === 1
-                      ? "arquivo"
-                      : "arquivos"}
-                  </span>
-                </div>
-              </div>
-
-              <ChevronRight
-                size={20}
-                className="hidden text-slate-300 transition group-hover:translate-x-1 group-hover:text-[var(--primary)] xl:block"
+              {/* Destaque lateral */}
+              <div
+                aria-hidden="true"
+                className="absolute inset-y-0 left-0 w-1 bg-[var(--primary)]"
               />
+
+              <div className="p-5 sm:p-6">
+                {/* Resumo principal */}
+                <div className="flex flex-col gap-5 lg:flex-row lg:items-start lg:justify-between">
+                  <div className="flex min-w-0 items-start gap-4">
+                    <div className="flex size-12 shrink-0 items-center justify-center rounded-xl bg-[var(--primary-light)] text-[var(--primary)]">
+                      <FileText
+                        size={22}
+                        strokeWidth={1.9}
+                        aria-hidden="true"
+                      />
+                    </div>
+
+                    <div className="min-w-0">
+                      <div className="flex flex-wrap items-center gap-2">
+                        <span className="rounded-lg bg-[var(--surface-secondary)] px-2.5 py-1 text-xs font-bold uppercase tracking-wide text-[var(--text-secondary)]">
+                          {operation.documentType}
+                        </span>
+
+                        <h4 className="break-all font-mono text-lg font-semibold tracking-tight text-[var(--text-primary)]">
+                          {operation.documentNumber}
+                        </h4>
+                      </div>
+
+                      <p className="mt-2 text-base font-semibold text-[var(--text-primary)]">
+                        {operation.importer}
+                      </p>
+
+                      <p className="mt-1 font-mono text-sm text-[var(--text-secondary)]">
+                        DTA {operation.dta}
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* Modal + status */}
+                  <div className="flex flex-wrap items-center gap-2 lg:justify-end">
+                    <span
+                      className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-sm font-semibold ring-1 ring-inset ${modalClass}`}
+                    >
+                      <ModalIcon size={15} aria-hidden="true" />
+                      {operation.modal}
+                    </span>
+
+                    <span
+                      className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-sm font-semibold ring-1 ring-inset ${status.className}`}
+                    >
+                      <StatusIcon size={15} aria-hidden="true" />
+                      {status.label}
+                    </span>
+                  </div>
+                </div>
+
+                {/* Dados rápidos */}
+                <div className="mt-5 grid gap-3 rounded-xl bg-[var(--surface-secondary)]/65 p-4 sm:grid-cols-2 xl:grid-cols-4">
+                  <InfoBlock
+                    icon={Globe2}
+                    label="País de origem"
+                    value={operation.country}
+                  />
+
+                  <InfoBlock
+                    icon={CalendarDays}
+                    label="Data do envio"
+                    value={operation.createdAt}
+                  />
+
+                  <InfoBlock
+                    icon={FileText}
+                    label="Conhecimento"
+                    value={operation.knowledgeNumber}
+                    mono
+                  />
+
+                  <div className="flex items-center justify-between gap-4 rounded-xl bg-white px-4 py-3 shadow-sm">
+                    <div className="flex items-center gap-3">
+                      <div className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-[var(--primary-light)] text-[var(--primary)]">
+                        <FileStack
+                          size={17}
+                          aria-hidden="true"
+                        />
+                      </div>
+
+                      <div>
+                        <p className="text-xs font-semibold uppercase tracking-[0.1em] text-[var(--text-muted)]">
+                          Arquivos
+                        </p>
+
+                        <p className="mt-1 text-sm font-semibold text-[var(--text-primary)]">
+                          {operation.files.length}{" "}
+                          {operation.files.length === 1
+                            ? "arquivo"
+                            : "arquivos"}
+                        </p>
+                      </div>
+                    </div>
+
+                    <ChevronRight
+                      size={20}
+                      className="text-[var(--text-muted)] transition-transform duration-200 group-hover:translate-x-1 group-hover:text-[var(--primary)]"
+                      aria-hidden="true"
+                    />
+                  </div>
+                </div>
+              </div>
             </button>
           );
         })}
       </div>
     </section>
+  );
+}
+
+type InfoBlockProps = {
+  icon: typeof Globe2;
+  label: string;
+  value: string;
+  mono?: boolean;
+};
+
+function InfoBlock({
+  icon: Icon,
+  label,
+  value,
+  mono = false,
+}: InfoBlockProps) {
+  return (
+    <div className="flex items-start gap-3 rounded-lg px-2 py-2">
+      <div className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-white text-[var(--primary)] shadow-sm">
+        <Icon
+          size={17}
+          strokeWidth={1.9}
+          aria-hidden="true"
+        />
+      </div>
+
+      <div className="min-w-0">
+        <p className="text-xs font-semibold uppercase tracking-[0.1em] text-[var(--text-muted)]">
+          {label}
+        </p>
+
+        <p
+          className={`mt-1 break-words text-sm font-semibold text-[var(--text-primary)] ${
+            mono ? "font-mono" : ""
+          }`}
+        >
+          {value}
+        </p>
+      </div>
+    </div>
   );
 }

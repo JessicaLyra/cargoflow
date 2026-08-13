@@ -16,19 +16,19 @@ export function Logo({
 
   const subtitleColor =
     variant === "light"
-      ? "text-slate-400"
-      : "text-[var(--text-secondary)]";
+      ? "text-blue-400"
+      : "text-[var(--text-primary)]";
 
   return (
     <div className="flex items-center gap-3">
-      <div className="flex size-10 items-center justify-center rounded-xl bg-[var(--primary)] text-white">
-        <Boxes size={22} strokeWidth={2} />
+      <div className="flex size-15 items-center justify-center rounded-xl bg-[var(--primary)] text-white">
+        <Boxes size={35} strokeWidth={2} />
       </div>
 
       {!compact && (
         <div className="flex flex-col">
           <span
-            className={`text-xl font-semibold leading-none ${textColor}`}
+            className={`text-3xl font-semibold leading-none ${textColor}`}
           >
             CargoFlow
           </span>

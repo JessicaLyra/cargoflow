@@ -25,7 +25,7 @@ export const documentOperations: DocumentOperation[] = [
     id: "2",
     documentType: "DUIMP",
     documentNumber: "26BR0000123456-7",
-    dta: "25/0004821-7",
+    dta: "25/0004821-8",
     importer: "Global Parts Importação Ltda.",
     country: "China",
     modal: "Marítimo",

@@ -1,23 +1,119 @@
 @import "tailwindcss";
 
+/* =========================================================
+   CargoFlow - Design Tokens
+   Variáveis globais utilizadas para manter consistência
+   visual entre páginas e componentes.
+   ========================================================= */
+
 :root {
+  /* ---------------------------------------------------------
+     Base
+     Cores gerais da aplicação.
+     --------------------------------------------------------- */
+
   --background: #f8fafc;
   --foreground: #0f172a;
 
+
+  /* ---------------------------------------------------------
+     Brand
+     Azul principal da identidade visual do CargoFlow.
+     Utilizado em navegação, links, foco e elementos da marca.
+     --------------------------------------------------------- */
+
   --primary: #2563eb;
   --primary-hover: #1d4ed8;
+  --primary-light: #eff6ff;
+
+  --secondary: #0f172a;
+  --secondary-light: #1e293b;
+
+
+  /* ---------------------------------------------------------
+     Action / CTA
+     Cor destinada às principais ações da aplicação.
+     Ex.: Entrar, Enviar para averbação, Nova averbação.
+     --------------------------------------------------------- */
+
+  --action: #f97316;
+  --action-hover: #ea580c;
+  --action-light: #fff7ed;
+
+
+  /* ---------------------------------------------------------
+     Surfaces
+     Fundos utilizados em cards, painéis e áreas secundárias.
+     --------------------------------------------------------- */
 
   --surface: #ffffff;
+  --surface-secondary: #f1f5f9;
+
+
+  /* ---------------------------------------------------------
+     Borders
+     Bordas padrão e bordas que precisam de maior destaque.
+     --------------------------------------------------------- */
+
   --border: #e2e8f0;
+  --border-strong: #cbd5e1;
+
+
+  /* ---------------------------------------------------------
+     Typography
+     Hierarquia das cores de texto.
+     --------------------------------------------------------- */
 
   --text-primary: #1e293b;
   --text-secondary: #64748b;
+  --text-muted: #94a3b8;
+  --text-inverse: #ffffff;
+
+
+  /* ---------------------------------------------------------
+     Success
+     Utilizado exclusivamente para ações ou estados concluídos.
+     --------------------------------------------------------- */
 
   --success: #16a34a;
+  --success-dark: #15803d;
+  --success-light: #f0fdf4;
+
+
+  /* ---------------------------------------------------------
+     Warning
+     Utilizado para situações que exigem atenção do usuário.
+     --------------------------------------------------------- */
+
   --warning: #d97706;
+  --warning-dark: #b45309;
+  --warning-light: #fffbeb;
+
+
+  /* ---------------------------------------------------------
+     Error
+     Utilizado para erros de formulário, API e operações.
+     --------------------------------------------------------- */
+
   --error: #dc2626;
+  --error-dark: #b91c1c;
+  --error-light: #fef2f2;
+
+
+  /* ---------------------------------------------------------
+     Information
+     Utilizado para mensagens e estados informativos.
+     --------------------------------------------------------- */
+
   --info: #2563eb;
+  --info-dark: #1d4ed8;
+  --info-light: #eff6ff;
 }
+
+
+/* =========================================================
+   Reset / Base
+   ========================================================= */
 
 * {
   box-sizing: border-box;
@@ -34,9 +130,86 @@ body {
   font-family: var(--font-geist), Arial, Helvetica, sans-serif;
 }
 
+
+/* Mantém controles de formulário utilizando a fonte global. */
+
 button,
 input,
 select,
 textarea {
   font: inherit;
+}
+
+
+/* =========================================================
+   Animations
+   Animações sutis utilizadas na entrada dos elementos.
+   ========================================================= */
+
+/* Entrada vertical com fade. */
+
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+
+/* Entrada horizontal utilizada no conteúdo institucional. */
+
+@keyframes fade-right {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+
+/* Classes utilitárias das animações. */
+
+.animate-fade-up {
+  animation: fade-up 0.7s ease-out both;
+}
+
+.animate-fade-right {
+  animation: fade-right 1s ease-out both;
+}
+
+
+/* Delays utilizados para criar entrada progressiva dos elementos. */
+
+.animation-delay-150 {
+  animation-delay: 150ms;
+}
+
+.animation-delay-300 {
+  animation-delay: 300ms;
+}
+
+
+/* =========================================================
+   Accessibility
+   Respeita usuários que preferem reduzir movimentos.
+   ========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  .animate-fade-up,
+  .animate-fade-right {
+    animation: none;
+  }
 }

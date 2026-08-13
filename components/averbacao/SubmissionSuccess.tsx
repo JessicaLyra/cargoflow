@@ -146,7 +146,7 @@ export function SubmissionSuccess({
             Você pode iniciar outra averbação sem aguardar a conclusão desta.
           </p>
 
-          <Button type="button" onClick={onNewSubmission} className="gap-2">
+          <Button type="button" variant="action" onClick={onNewSubmission} className="gap-2">
             <Plus size={18} />
             Nova averbação
           </Button>

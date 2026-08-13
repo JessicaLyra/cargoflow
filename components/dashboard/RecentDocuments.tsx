@@ -1,268 +1,186 @@
-import { ArrowRight, Plane, Ship, Truck } from "lucide-react";
+import {
+  AlertTriangle,
+  ArrowRight,
+  CheckCircle2,
+  FileCheck2,
+  LoaderCircle,
+  Plane,
+  Ship,
+  Truck,
+} from "lucide-react";
 
-import { StatusBadge } from "@/components/ui/StatusBadge";
-
-const documents = [
+const activities = [
   {
-    date: "21/05/2025 09:41",
+    time: "09:41",
     id: "AVG250521-0032",
     process: "DUIMP",
+    event: "Averbação concluída",
     importer: "Atlas Comércio Exterior",
-    broker: "ABC Comex",
-    event: "Conclusão de averbação",
-    user: "Juliana L.",
     modal: "Marítimo",
     modalIcon: Ship,
-    status: "success" as const,
+    icon: CheckCircle2,
+    iconClass:
+      "bg-[var(--success-light)] text-[var(--success)] ring-[var(--success)]/20",
+    statusClass:
+      "bg-[var(--success-light)] text-[var(--success-dark)]",
     statusLabel: "Concluído",
   },
   {
-    date: "21/05/2025 09:38",
+    time: "09:38",
     id: "AVG250521-0031",
     process: "DI",
-    importer: "NorteSul Importações",
-    broker: "Global Trade",
     event: "Documentos anexados",
-    user: "Carlos M.",
+    importer: "NorteSul Importações",
     modal: "Aéreo",
     modalIcon: Plane,
-    status: "processing" as const,
-    statusLabel: "Processando",
+    icon: FileCheck2,
+    iconClass:
+      "bg-[var(--primary-light)] text-[var(--primary)] ring-[var(--primary)]/20",
+    statusClass:
+      "bg-[var(--primary-light)] text-[var(--primary)]",
+    statusLabel: "Atualizado",
   },
   {
-    date: "21/05/2025 09:34",
+    time: "09:34",
     id: "AVG250521-0030",
     process: "DUIMP",
+    event: "Processamento iniciado",
     importer: "Mercosul Trading",
-    broker: "LogisBrasil",
-    event: "Início de processamento",
-    user: "Mariana S.",
     modal: "Rodoviário",
     modalIcon: Truck,
-    status: "processing" as const,
+    icon: LoaderCircle,
+    iconClass:
+      "bg-[var(--warning-light)] text-[var(--warning)] ring-[var(--warning)]/20",
+    statusClass:
+      "bg-[var(--warning-light)] text-[var(--warning-dark)]",
     statusLabel: "Processando",
   },
   {
-    date: "21/05/2025 09:28",
+    time: "09:28",
     id: "AVG250521-0029",
     process: "DI",
-    importer: "Oceânica Import",
-    broker: "ABC Comex",
     event: "Falha no processamento",
-    user: "Juliana L.",
+    importer: "Oceânica Import",
     modal: "Aéreo",
     modalIcon: Plane,
-    status: "error" as const,
+    icon: AlertTriangle,
+    iconClass:
+      "bg-[var(--error-light)] text-[var(--error)] ring-[var(--error)]/20",
+    statusClass:
+      "bg-[var(--error-light)] text-[var(--error-dark)]",
     statusLabel: "Falha",
   },
 ];
 
 export function RecentDocuments() {
   return (
-    <section className="overflow-hidden rounded-2xl border border-[var(--border)] bg-white">
-      <div className="flex flex-col gap-4 border-b border-[var(--border)] px-6 py-5 sm:flex-row sm:items-center sm:justify-between">
+    <section className="overflow-hidden rounded-2xl border border-[var(--border)] bg-[var(--surface)] shadow-sm">
+      <div className="flex flex-col gap-4 border-b border-[var(--border)] px-6 py-6 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <p className="text-sm font-medium text-[var(--primary)]">
+          <p className="text-sm font-semibold uppercase tracking-[0.16em] text-[var(--primary)]">
             Atividade recente
           </p>
 
-          <h3 className="mt-1 text-xl font-semibold text-[var(--text-primary)]">
+          <h3 className="mt-2 text-2xl font-semibold tracking-tight text-[var(--text-primary)]">
             Últimas movimentações
           </h3>
         </div>
 
-        <button
-          type="button"
-          className="flex cursor-pointer items-center gap-2 text-sm font-medium text-[var(--primary)] transition-opacity hover:opacity-70"
-        >
-          Ver todas
-          <ArrowRight size={16} />
-        </button>
       </div>
 
-      <div className="hidden overflow-x-auto lg:block">
-        <table className="w-full border-collapse">
-          <thead>
-            <tr className="border-b border-[var(--border)] bg-slate-50/70 text-left">
-              <th className="px-6 py-4 text-sm font-medium text-[var(--text-secondary)]">
-                Data/Hora
-              </th>
-
-              <th className="px-6 py-4 text-sm font-medium text-[var(--text-secondary)]">
-                Averbação
-              </th>
-
-              <th className="px-6 py-4 text-sm font-medium text-[var(--text-secondary)]">
-                Modal
-              </th>
-
-              <th className="px-6 py-4 text-sm font-medium text-[var(--text-secondary)]">
-                Comissária
-              </th>
-
-              <th className="px-6 py-4 text-sm font-medium text-[var(--text-secondary)]">
-                Evento
-              </th>
-
-              <th className="px-6 py-4 text-sm font-medium text-[var(--text-secondary)]">
-                Status
-              </th>
-
-              <th className="px-6 py-4 text-sm font-medium text-[var(--text-secondary)]">
-                Usuário
-              </th>
-            </tr>
-          </thead>
-
-          <tbody>
-            {documents.map((document) => {
-              const ModalIcon = document.modalIcon;
-
-              return (
-                <tr
-                  key={document.id}
-                  className="border-b border-[var(--border)] transition-colors last:border-b-0 hover:bg-slate-50/60"
-                >
-                  <td className="whitespace-nowrap px-6 py-4 text-sm text-[var(--text-secondary)]">
-                    {document.date}
-                  </td>
-
-                  <td className="px-6 py-4">
-                    <div>
-                      <p className="font-mono text-sm font-medium text-[var(--primary)]">
-                        {document.id}
-                      </p>
-
-                      <p className="mt-1 text-xs text-[var(--text-secondary)]">
-                        {document.process}
-                      </p>
-                    </div>
-                  </td>
-
-                  <td className="px-6 py-4">
-                    <div className="flex items-center gap-2">
-                      <ModalIcon
-                        size={18}
-                        strokeWidth={1.8}
-                        className="text-[var(--primary)]"
-                      />
-
-                      <span className="text-sm text-[var(--text-primary)]">
-                        {document.modal}
-                      </span>
-                    </div>
-                  </td>
-
-                  <td className="px-6 py-4 text-sm text-[var(--text-primary)]">
-                    {document.broker}
-                  </td>
-
-                  <td className="px-6 py-4">
-                    <div>
-                      <p className="text-sm text-[var(--text-primary)]">
-                        {document.event}
-                      </p>
-
-                      <p className="mt-1 text-xs text-[var(--text-secondary)]">
-                        {document.importer}
-                      </p>
-                    </div>
-                  </td>
-
-                  <td className="px-6 py-4">
-                    <StatusBadge status={document.status}>
-                      {document.statusLabel}
-                    </StatusBadge>
-                  </td>
-
-                  <td className="whitespace-nowrap px-6 py-4 text-sm text-[var(--text-secondary)]">
-                    {document.user}
-                  </td>
-                </tr>
-              );
-            })}
-          </tbody>
-        </table>
-      </div>
-
-      <div className="divide-y divide-[var(--border)] lg:hidden">
-        {documents.map((document) => {
-          const ModalIcon = document.modalIcon;
+      <div className="divide-y divide-[var(--border)]">
+        {activities.map((activity) => {
+          const ActivityIcon = activity.icon;
+          const ModalIcon = activity.modalIcon;
 
           return (
-            <article key={document.id} className="p-5">
-              <div className="flex items-start justify-between gap-4">
-                <div>
-                  <p className="font-mono text-sm font-medium text-[var(--primary)]">
-                    {document.id}
-                  </p>
+            <article
+              key={activity.id}
+              className="group relative grid gap-4 px-6 py-5 transition-colors hover:bg-[var(--surface-secondary)]/60 lg:grid-cols-[72px_minmax(0,1.4fr)_minmax(0,1fr)_auto] lg:items-center"
+            >
+              {/* Horário */}
+              <div>
+                <p className="text-lg font-bold tracking-tight text-[var(--text-primary)]">
+                  {activity.time}
+                </p>
 
-                  <p className="mt-1 text-sm text-[var(--text-secondary)]">
-                    {document.date}
-                  </p>
-                </div>
-
-                <StatusBadge status={document.status}>
-                  {document.statusLabel}
-                </StatusBadge>
+                <p className="mt-1 text-xs font-medium text-[var(--text-muted)]">
+                  hoje
+                </p>
               </div>
 
-              <div className="mt-4 grid gap-4 sm:grid-cols-2">
-                <div>
-                  <p className="text-xs font-medium uppercase tracking-wide text-[var(--text-secondary)]">
-                    Modal
-                  </p>
+              {/* Evento principal */}
+              <div className="flex min-w-0 items-start gap-4">
+                <div
+                  className={`flex size-11 shrink-0 items-center justify-center rounded-xl ring-1 ring-inset ${activity.iconClass}`}
+                >
+                  <ActivityIcon
+                    size={20}
+                    aria-hidden="true"
+                  />
+                </div>
 
-                  <div className="mt-2 flex items-center gap-2">
-                    <ModalIcon
-                      size={17}
-                      strokeWidth={1.8}
-                      className="text-[var(--primary)]"
-                    />
+                <div className="min-w-0">
+                  <div className="flex flex-wrap items-center gap-2">
+                    <p className="text-base font-semibold text-[var(--text-primary)]">
+                      {activity.event}
+                    </p>
 
-                    <span className="text-sm text-[var(--text-primary)]">
-                      {document.modal}
+                    <span
+                      className={`rounded-full px-2.5 py-1 text-xs font-semibold ${activity.statusClass}`}
+                    >
+                      {activity.statusLabel}
+                    </span>
+                  </div>
+
+                  <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1">
+                    <span className="font-mono text-sm font-semibold text-[var(--primary)]">
+                      {activity.id}
+                    </span>
+
+                    <span className="text-sm font-medium text-[var(--text-secondary)]">
+                      {activity.process}
                     </span>
                   </div>
                 </div>
+              </div>
 
-                <div>
-                  <p className="text-xs font-medium uppercase tracking-wide text-[var(--text-secondary)]">
-                    Comissária
-                  </p>
+              {/* Contexto da operação */}
+              <div className="min-w-0">
+                <p className="truncate text-base font-medium text-[var(--text-primary)]">
+                  {activity.importer}
+                </p>
 
-                  <p className="mt-2 text-sm text-[var(--text-primary)]">
-                    {document.broker}
-                  </p>
+                <div className="mt-2 flex items-center gap-2">
+                  <ModalIcon
+                    size={17}
+                    className="text-[var(--primary)]"
+                    aria-hidden="true"
+                  />
+
+                  <span className="text-sm font-medium text-[var(--text-secondary)]">
+                    {activity.modal}
+                  </span>
                 </div>
               </div>
 
-              <div className="mt-4">
-                <p className="text-xs font-medium uppercase tracking-wide text-[var(--text-secondary)]">
-                  Evento
-                </p>
-
-                <p className="mt-2 text-sm font-medium text-[var(--text-primary)]">
-                  {document.event}
-                </p>
-
-                <p className="mt-1 text-sm text-[var(--text-secondary)]">
-                  {document.importer}
-                </p>
+              {/* Indicador visual */}
+              <div className="hidden justify-end lg:flex">
+                <ArrowRight
+                  size={18}
+                  className="text-[var(--text-muted)] transition-transform group-hover:translate-x-1 group-hover:text-[var(--primary)]"
+                  aria-hidden="true"
+                />
               </div>
             </article>
           );
         })}
       </div>
 
-      <div className="border-t border-[var(--border)] px-6 py-4">
-        <button
-          type="button"
-          className="flex cursor-pointer items-center gap-2 text-sm font-medium text-[var(--primary)] transition-opacity hover:opacity-70"
-        >
-          Ver todas as atividades
-          <ArrowRight size={16} />
-        </button>
+      <div className="border-t border-[var(--border)] bg-[var(--surface-secondary)]/35 px-6 py-4">
+        <p className="text-sm text-[var(--text-secondary)]">
+          Exibindo as últimas movimentações registradas no sistema.
+        </p>
       </div>
     </section>
   );

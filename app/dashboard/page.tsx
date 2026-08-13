@@ -1,4 +1,10 @@
-import { Plane, Ship, Truck } from "lucide-react";
+import {
+  CalendarDays,
+  Plane,
+  Plus,
+  Ship,
+  Truck,
+} from "lucide-react";
 
 import { AppLayout } from "@/components/layout/AppLayout";
 import { DocumentFlow } from "@/components/dashboard/DocumentFlow";
@@ -6,48 +12,79 @@ import { ModalCard } from "@/components/dashboard/ModalCard";
 import { ProcessingQueue } from "@/components/dashboard/ProcessingQueue";
 import { RecentDocuments } from "@/components/dashboard/RecentDocuments";
 import { Button } from "@/components/ui/Button";
+import Link from "next/link";
 
 export default function DashboardPage() {
   return (
     <AppLayout>
-      <div className="space-y-8">
-        <div className="flex flex-col gap-5 xl:flex-row xl:items-end xl:justify-between">
+      <div className="space-y-8 animate-fade-up">
+        {/* Cabeçalho */}
+        <section className="flex flex-col gap-6 xl:flex-row xl:items-center xl:justify-between">
           <div>
-            <p className="text-sm font-medium text-[var(--primary)]">
-              Visão operacional
+            <p className="text-base font-semibold text-[var(--primary)]">
+              Bom dia, Jessica! 👋
             </p>
 
-            <h2 className="mt-1 text-2xl font-semibold tracking-tight text-[var(--text-primary)] sm:text-3xl">
-              Operações de importação
-            </h2>
+            <h1 className="mt-2 text-3xl font-semibold tracking-[-0.03em] text-[var(--text-primary)] sm:text-4xl">
+              Resumo das operações
+            </h1>
 
-            <p className="mt-2 max-w-2xl text-base leading-7 text-[var(--text-secondary)]">
-              Acompanhe o fluxo documental, os modais de transporte e o
-              processamento das averbações em andamento.
+            <p className="mt-3 max-w-2xl text-base leading-7 text-[var(--text-secondary)]">
+              Confira os principais números e o andamento das operações de hoje.
             </p>
           </div>
 
-          <Button className="w-full sm:w-auto">
-            Nova averbação
-          </Button>
-        </div>
+          <div className="flex items-center gap-3">
+            <div className="flex min-h-14 min-w-0 flex-1 items-center gap-3 rounded-xl border border-[var(--border)] bg-[var(--surface)] px-3 shadow-sm sm:flex-none sm:px-4">
+              <div className="flex size-10 shrink-0 items-center justify-center rounded-lg bg-[var(--primary-light)] text-[var(--primary)]">
+                <CalendarDays size={19} />
+              </div>
 
-        <DocumentFlow />
+              <div className="min-w-0">
+                <p className="whitespace-nowrap text-sm font-semibold text-[var(--text-primary)]">
+                  12 de agosto, 2026
+                </p>
 
-        <section>
-          <div className="mb-4 flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
-            <div>
-              <p className="text-sm font-medium text-[var(--primary)]">
-                Distribuição operacional
-              </p>
-
-              <h3 className="mt-1 text-xl font-semibold text-[var(--text-primary)]">
-                Movimentação por modal
-              </h3>
+                <p className="mt-0.5 text-xs font-medium text-[var(--text-secondary)]">
+                  Quarta-feira
+                </p>
+              </div>
             </div>
 
-            <p className="text-sm text-[var(--text-secondary)]">
-              Volume consolidado das operações
+            <Link href="/averbacao" className="shrink-0">
+              <Button
+                variant="action"
+                className="h-14 gap-2 px-4 text-base font-semibold sm:px-5"
+              >
+                <Plus size={18} />
+
+                <span className="hidden sm:inline">
+                  Nova averbação
+                </span>
+
+                <span className="sm:hidden">
+                  Nova averbação
+                </span>
+              </Button>
+            </Link>
+          </div>
+        </section>
+
+        {/* Quantidade por modal */}
+        <section>
+          <div className="mb-5 flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
+            <div>
+              <p className="text-sm font-semibold uppercase tracking-[0.16em] text-[var(--primary)]">
+                Operações por modal
+              </p>
+
+              <h2 className="mt-2 text-2xl font-semibold tracking-tight text-[var(--text-primary)]">
+                Distribuição de documentos
+              </h2>
+            </div>
+
+            <p className="text-sm font-medium text-[var(--text-secondary)]">
+              Total consolidado do dia
             </p>
           </div>
 
@@ -56,30 +93,34 @@ export default function DashboardPage() {
               title="Aéreo"
               value={128}
               change={9}
-              processing={10}
               icon={Plane}
+              tone="air"
             />
 
             <ModalCard
               title="Marítimo"
               value={246}
               change={14}
-              processing={18}
               icon={Ship}
+              tone="maritime"
             />
 
             <ModalCard
               title="Rodoviário"
               value={94}
               change={5}
-              processing={6}
               icon={Truck}
               trend="down"
+              tone="road"
             />
           </div>
         </section>
 
-        <section className="grid gap-4 2xl:grid-cols-[minmax(0,1.7fr)_minmax(360px,0.8fr)]">
+        {/* Fluxo das operações */}
+        <DocumentFlow />
+
+        {/* Área operacional */}
+        <section className="grid gap-4 2xl:grid-cols-[minmax(0,1.45fr)_minmax(360px,0.75fr)]">
           <RecentDocuments />
           <ProcessingQueue />
         </section>
